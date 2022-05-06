@@ -32,7 +32,7 @@ function cvApng2Gif {
     )
     # 下載程式並設置到臨時環境變數
     [string] $App = Download_apng2gif
-    if (($env:Path).IndexOf($App) -ge 0) { $env:Path = $env:Path + ";$App;" }
+    if (($env:Path).IndexOf($App) -eq -1) { $env:Path = $env:Path + ";$App;" } 
     # 建立目標路徑
     if (!(Test-Path $dstDir -PathType:Container)) { mkdir $dstDir }
     $dstDir = [System.IO.Path]::GetFullPath($dstDir)
