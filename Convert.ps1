@@ -30,6 +30,8 @@ function cvApng2Gif {
         [string] $srcDir,
         [string] $dstDir
     )
+    # 檢測
+    if (!(Test-Path $srcDir)){ Write-Error "srcDir路徑有誤。無法讀取[$srcDir]"; return }
     # 下載程式並設置到臨時環境變數
     [string] $App = Download_apng2gif
     if (($env:Path).IndexOf($App) -eq -1) { $env:Path = $env:Path + ";$App;" } 
@@ -42,7 +44,7 @@ function cvApng2Gif {
         $F1 = $_.FullName
         $F2 = "$dstDir\$($_.BaseName).gif"
         # Write-Host $F1 "--->" $F2
-        (apng2gif $F1 $F2)|Out-Null
+        (apng2gif $F1 $F2)
     }
     explorer $dstDir
 } # cvApng2Gif 'animation' 'gif'
