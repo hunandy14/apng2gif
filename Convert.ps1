@@ -45,7 +45,7 @@ function cvApng2Gif {
         (apng2gif $F1 $F2)|Out-Null
     }
     explorer $dstDir
-} cvApng2Gif 'animation' 'gif'
+} # cvApng2Gif 'animation' 'gif'
 # cvApng2Gif 'png' 'gif2'
 
 # dir 'animation' -R -File|%{
