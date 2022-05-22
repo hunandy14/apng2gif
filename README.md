@@ -16,8 +16,11 @@ https://store.line.me/stickershop/product/13607322/?ref=Desktop
 - animation : png圖片路徑
 - gif       : 轉換後的gif路徑
 
-> 備註: 實測 Powershell5.1 啟動不能使用相對路徑
-
 ```ps1
-irm bit.ly/3KUdrvH|iex; cvApng2Gif 'animation' 'gif'
+# 用法1 (Powershell 5 下不支援相對路徑)
+irm bit.ly/3KUdrvH|iex; cvApng2Gif 'D:\animation' 'D\gif'
+
+# 用法2 (會自動在路徑內產生一個gif資料夾)
+irm bit.ly/3KUdrvH|iex; cvApng2Gif 'D:\animation'
+
 ```
