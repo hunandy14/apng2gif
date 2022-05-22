@@ -27,11 +27,17 @@ function Download_apng2gif {
 
 function cvApng2Gif {
     param (
+        [Parameter(Position = 0, ParameterSetName = "", Mandatory)]
         [string] $srcDir,
+        [Parameter(Position = 1, ParameterSetName = "")]
         [string] $dstDir
     )
+    # 獲取當前位置
+    if ($PSScriptRoot) { $curDir = $PSScriptRoot } else { $curDir = (Get-Location).Path }
+    
     # 檢測
     if (!(Test-Path $srcDir)){ Write-Error "srcDir路徑有誤。無法讀取[$srcDir]"; return }
+    if (!$dstDir) { $dstDir = $srcDir + "\gif" }
     # 下載程式並設置到臨時環境變數
     [string] $App = Download_apng2gif
     if (($env:Path).IndexOf($App) -eq -1) { $env:Path = $env:Path + ";$App;" } 
