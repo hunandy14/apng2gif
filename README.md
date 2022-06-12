@@ -19,13 +19,13 @@ https://store.line.me/stickershop/product/13607322/?ref=Desktop
 
 ```ps1
 # 用法1 (輸入下載的Line貼圖包zip檔案, 輸出在Temp目錄並自動打開)
-irm bit.ly/3KUdrvH|iex; cvApng2Gif 'D:\stickerpack.zip'
+irm bit.ly/3mBqlW1|iex; cvApng2Gif 'D:\stickerpack.zip'
 
 # 用法2 (輸出在Temp目錄並自動打開)
-irm bit.ly/3KUdrvH|iex; cvApng2Gif 'D:\animation'
+irm bit.ly/3mBqlW1|iex; cvApng2Gif 'D:\animation'
 
 # 用法3
-irm bit.ly/3KUdrvH|iex; cvApng2Gif 'D:\animation' 'D:\animation\gif'
+irm bit.ly/3mBqlW1|iex; cvApng2Gif 'D:\animation' 'D:\animation\gif'
 
 ```
 
