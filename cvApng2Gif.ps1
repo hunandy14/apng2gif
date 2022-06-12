@@ -43,7 +43,7 @@ function cvApng2Gif_core {
     
     # 檢測路徑
     if (!(Test-Path -Type:Container $ApngPath)){
-        Write-Error "srcDir路徑有誤。無法讀取[$ApngPath]"; return
+        Write-Error "ApngPath 路徑有誤無法讀取[$ApngPath]"; return
     } else {
         $ApngPath = [System.IO.Path]::GetFullPath($ApngPath)
     }
@@ -95,7 +95,7 @@ function cvApng2Gif {
     
     # 檢測
     if (!(Test-Path -Type:Any $ApngPath)){
-        Write-Error "ApngPath路徑有誤無法讀取[$ApngPath]"; return
+        Write-Error "ApngPath 路徑有誤無法讀取[$ApngPath]"; return
     } else {
         $ApngPath = [System.IO.Path]::GetFullPath($ApngPath)
     }
