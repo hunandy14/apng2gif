@@ -87,8 +87,7 @@ function cvApng2Gif {
         [string] $ApngPath,
         [Parameter(Position = 1, ParameterSetName = "")]
         [string] $OutPath,
-        [ValidateSet( 'True', 'False' )]
-        [string] $ShowFolder,
+        [switch] $ShowFolder,
         [switch] $Log
     )
     # 設定值
@@ -109,22 +108,13 @@ function cvApng2Gif {
             # 重定位輸入輸出路徑
             $ApngPath = "$Path\$BaseName\animation"
             $OutPath  = "$Path\gif"
-            if (!$ShowFolder) {
-                $ShowFolder = 'True'
-            }
+            $ShowFolder = $true
         } else {
             Write-Host "檔案不是 zip 檔案"
         }
     }
-    
-    # 邏輯轉換
-    if ($ShowFolder -eq 'True') {
-        $SF = $true
-    } else {
-        $SF = $false
-    }
     # 執行轉換
-    cvApng2Gif_core -ApngPath:$ApngPath -OutPath:$OutPath -ShowFolder:$SF -Log:$Log
+    cvApng2Gif_core -ApngPath:$ApngPath -OutPath:$OutPath -ShowFolder:$ShowFolder -Log:$Log
 }
 # cvApng2Gif 'Z:\work\stickerpack.zip'
 # cvApng2Gif 'animation' 'gif'
