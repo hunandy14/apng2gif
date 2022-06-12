@@ -16,11 +16,27 @@ https://store.line.me/stickershop/product/13607322/?ref=Desktop
 - animation : png圖片路徑
 - gif       : 轉換後的gif路徑
 
-```ps1
-# 用法1 (Powershell 5 下不支援相對路徑)
-irm bit.ly/3KUdrvH|iex; cvApng2Gif 'D:\animation' 'D\gif'
 
-# 用法2 (會自動在路徑內產生一個gif資料夾)
+```ps1
+# 用法1 (輸入下載的Line貼圖包zip檔案, 輸出在Temp目錄並自動打開)
+irm bit.ly/3KUdrvH|iex; cvApng2Gif 'D:\stickerpack.zip'
+
+# 用法2 (輸出在Temp目錄並自動打開)
 irm bit.ly/3KUdrvH|iex; cvApng2Gif 'D:\animation'
 
+# 用法3
+irm bit.ly/3KUdrvH|iex; cvApng2Gif 'D:\animation' 'D:\animation\gif'
+
+```
+
+> 備註：Powershell 5 下不支援相對路徑
+
+
+
+
+## 原始命令使用方法
+```ps1
+dir 'animation' -R -File|%{
+    (cvApng2Gif $_.FullName "gif\$($_.BaseName).gif")|Out-Null
+}
 ```
