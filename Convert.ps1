@@ -1,0 +1,1 @@
+irm https://raw.githubusercontent.com/hunandy14/cvApng2Gif/master/cvApng2Gif.ps1|iex
