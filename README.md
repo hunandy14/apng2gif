@@ -11,6 +11,6 @@ Line動態GIF貼圖下載
 irm bit.ly/3mBqlW1|iex; DownloadLineSticker -Explore -ID:13607322
 
 # 下載到指定位置
-irm bit.ly/3mBqlW1|iex; DownloadLineSticker 'D:\Line貼圖\13607322'
+irm bit.ly/3mBqlW1|iex; DownloadLineSticker 13607322 'D:\Line貼圖\13607322'
 
 ```
