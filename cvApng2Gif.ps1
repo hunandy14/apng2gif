@@ -150,6 +150,6 @@ function DLLSticker {
         Expand-Archive $FullName $ExpPath -Force
     } # if ($Explore) { explorer $ExpPath }
     # 轉換檔案
-    if (!$Path) { $Path = "$ExpPath\gif" }
+    if (!$Path) { $Path = "$ExpPath\gif"; $Explore = $true }
     cvApng2Gif "$ExpPath\animation" $Path -Explore:$Explore
-} # DownloadLineSticker -Explore -ID:13607322
+} # DownloadLineSticker -ID:13607322
