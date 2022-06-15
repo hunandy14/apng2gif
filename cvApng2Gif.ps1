@@ -121,7 +121,7 @@ function cvApng2Gif {
 # cvApng2Gif 'animation' 'gif' -Log
 # cvApng2Gif 'Z:\work\animation' 'Z:\work\gif' -Log
 
-function DownloadLineSticker {
+function DLLSticker {
     param (
         [Parameter(Position = 0, ParameterSetName = "", Mandatory)]
         [string] $ID,

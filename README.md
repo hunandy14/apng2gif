@@ -8,9 +8,9 @@ Line動態GIF貼圖下載
 
 ```ps1
 # 下載到暫存資料夾並自動打開
-irm bit.ly/3mBqlW1|iex; DownloadLineSticker -Explore -ID:13607322
+irm bit.ly/3mBqlW1|iex; DLLSticker -Explore -ID:13607322
 
 # 下載到指定位置
-irm bit.ly/3mBqlW1|iex; DownloadLineSticker 13607322 'D:\Line貼圖\13607322'
+irm bit.ly/3mBqlW1|iex; DLLSticker 13607322 'D:\Line動態貼圖\13607322'
 
 ```
