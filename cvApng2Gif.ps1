@@ -12,7 +12,7 @@ function Install-apng2gif {
     if (Get-Command $FileName -CommandType:Application -ErrorAction:0) { return }
 
     # 創建資料夾
-    if (!(Test-Path -PathType:Container $AppDir)) { mkdir $AppDir -Force }
+    if (!(Test-Path -PathType:Container $AppDir)) { (mkdir $AppDir -Force)|Out-Null }
     # 下載
     if (!(Test-Path -PathType:Leaf $AppPath) -or $Force) {
         Start-BitsTransfer $AppSource $AppPath
@@ -35,7 +35,7 @@ function cvApng2Gif_core {
         [string] $ApngPath,
         [Parameter(Position = 1, ParameterSetName = "")]
         [string] $OutPath,
-        [switch] $ShowFolder,
+        [switch] $Explore,
         [switch] $Log
     )
     # 設定值
@@ -51,21 +51,21 @@ function cvApng2Gif_core {
     # 輸出路徑為空
     if (!$OutPath) {
         $OutPath  = "$Path\gif"
-        $ShowFolder = $true
+        $Explore = $true
     }
     
     # 下載程式並設置到臨時環境變數
     Install-apng2gif -Add2EnvPath
     
     # 建立目標路徑
-    if (!(Test-Path $OutPath -PathType:Container)) { mkdir $OutPath }
+    if (!(Test-Path $OutPath -PathType:Container)) { (mkdir $OutPath)|Out-Null }
     $OutPath = [System.IO.Path]::GetFullPath($OutPath)
 
     # 開始轉換
     Get-ChildItem $ApngPath -Recurse -File|ForEach-Object{
         $F1 = $_.FullName
         $F2 = "$OutPath\$($_.BaseName).gif"
-        (apng2gif $F1 $F2) | Out-Null
+        (apng2gif $F1 $F2)|Out-Null
         if ($Log) {
             Write-Host "$F1"
             Write-Host "    ---> $F2" -ForegroundColor:Yellow
@@ -73,7 +73,7 @@ function cvApng2Gif_core {
         
     }
     # 開啟目錄資料夾
-    if ($ShowFolder) { explorer $OutPath }
+    if ($Explore) { explorer $OutPath }
     Write-Host "檔案已輸出到: " -NoNewline
     Write-Host $OutPath -ForegroundColor:Yellow
 }
@@ -87,7 +87,7 @@ function cvApng2Gif {
         [string] $ApngPath,
         [Parameter(Position = 1, ParameterSetName = "")]
         [string] $OutPath,
-        [switch] $ShowFolder,
+        [switch] $Explore,
         [switch] $Log
     )
     # 設定值
@@ -108,35 +108,48 @@ function cvApng2Gif {
             # 重定位輸入輸出路徑
             $ApngPath = "$Path\$BaseName\animation"
             $OutPath  = "$Path\gif"
-            $ShowFolder = $true
+            $Explore = $true
         } else {
             Write-Host "檔案不是 zip 檔案"
         }
     }
     # 執行轉換
-    cvApng2Gif_core -ApngPath:$ApngPath -OutPath:$OutPath -ShowFolder:$ShowFolder -Log:$Log
+    cvApng2Gif_core -ApngPath:$ApngPath -OutPath:$OutPath -Explore:$Explore -Log:$Log
 }
 # cvApng2Gif 'Z:\work\stickerpack.zip'
 # cvApng2Gif 'animation' 'gif'
 # cvApng2Gif 'animation' 'gif' -Log
 # cvApng2Gif 'Z:\work\animation' 'Z:\work\gif' -Log
 
-
-
-# 廢棄代碼
-# function Run_gif2apng {
-#     param (
-#         [string] $ApngPath,
-#         [string] $dstDir
-#     )
-#     if (!(Test-Path $dstDir -PathType:Container)) { New-Item -ItemType:Directory $dstDir }
-#     Get-ChildItem $ApngPath -Recurse -File|ForEach-Object{
-#         (gif2apng $_.FullName "$dstDir\$($_.BaseName).png")|Out-Null
-#     }
-# }
-# Run_gif2apng 'gif' 'png'
-
-# 轉換的最簡短代碼
-# dir 'animation' -R -File|%{
-#     (cvApng2Gif $_.FullName "gif\$($_.BaseName).gif")|Out-Null
-# }
+function DownloadLineSticker {
+    param (
+        [Parameter(Position = 0, ParameterSetName = "", Mandatory)]
+        [string] $ID,
+        [Parameter(Position = 1, ParameterSetName = "")]
+        [string] $Path,
+        [switch] $Explore
+    )
+    # 確認網址有效性
+    # $Sticker   = "https://stickershop.line-scdn.net/stickershop/v1/product/$ID/PC/stickers.zip"
+    $Animation = "https://stickershop.line-scdn.net/stickershop/v1/product/$ID/PC/stickerpack.zip"
+    $URL = $Animation
+    $Response = Invoke-WebRequest -Uri:$URL -ErrorAction:SilentlyContinue
+    if (!$Response) { Write-Host "貼圖代碼無效:: 貼圖代碼錯誤或是該貼圖非動態" -ForegroundColor:Yellow } 
+    # 下載位置
+    $AppDir = $env:TEMP + "\DownloadLineSticker"
+    if (!(Test-Path $AppDir)) { (mkdir $AppDir -Force)|Out-Null }
+    # 檔案名稱
+    $FileName = "stickerpack.zip"
+    $FullName = "$AppDir\$FileName"
+    # 解縮位置
+    $ExpPath = "$AppDir\$ID"
+    # if ($Path) { $ExpPath = "$Path" }
+    # 下載
+    if ((!(Test-Path $ExpPath)) -or $Force) {
+        if (!(Test-Path $FullName)) { Start-BitsTransfer $URL $FullName }
+        Expand-Archive $FullName $ExpPath -Force
+    } # if ($Explore) { explorer $ExpPath }
+    # 轉換檔案
+    if (!$Path) { $Path = "$ExpPath\gif" }
+    cvApng2Gif "$ExpPath\animation" $Path -Explore:$Explore
+} # DownloadLineSticker -Explore -ID:13607322
