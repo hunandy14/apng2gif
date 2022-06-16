@@ -137,12 +137,12 @@ function DLLSticker {
     $URL = $Animation
     $BaseName = "stickerpack"
     # 確認網址有效性
-    try { $Response = Invoke-WebRequest -Uri:$Animation -ErrorAction:Stop } catch {
+    try { Invoke-WebRequest -Uri:$Animation -ErrorAction:Stop|Out-Null } catch {
         $Is_Static = $true
         $URL = $Sticker
         $BaseName = 'stickers'
         # 非動態貼圖
-        try { $Response = Invoke-WebRequest -Uri:$Sticker -ErrorAction:Stop } catch { 
+        try { Invoke-WebRequest -Uri:$Sticker -ErrorAction:Stop|Out-Null } catch { 
             Write-Host "貼圖代碼無效:: 貼圖代碼錯誤" -ForegroundColor:Yellow;return
         }
     }
@@ -156,7 +156,7 @@ function DLLSticker {
     # 解縮位置
     $ExpPath = "$AppDir\temp"
     # 下載
-    if (!(Test-Path $FullName)) { Start-BitsTransfer $URL $FullName }
+    Start-BitsTransfer $URL $FullName
     Expand-Archive $FullName $ExpPath -Force
     
     # 輸出檔案
@@ -177,4 +177,3 @@ function DLLSticker {
 } 
 # DLLSticker -ID:13607322 # 動態
 # DLLSticker -ID:24468 # 靜態
-
