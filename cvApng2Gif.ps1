@@ -154,7 +154,7 @@ function DLLSticker {
     $FileName = "$BaseName.zip"
     $FullName = "$AppDir\$FileName"
     # 解縮位置
-    $ExpPath = "$AppDir\temp"
+    $ExpPath = "$AppDir\temp\$ID"
     # 下載
     Start-BitsTransfer $URL $FullName
     Expand-Archive $FullName $ExpPath -Force
