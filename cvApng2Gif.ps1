@@ -55,7 +55,7 @@ function cvApng2Gif_core {
     }
     
     # 下載程式並設置到臨時環境變數
-    Install-apng2gif -Add2EnvPath
+    (Install-apng2gif -Add2EnvPath)|Out-Null
     
     # 建立目標路徑
     if (!(Test-Path $OutPath -PathType:Container)) { (mkdir $OutPath)|Out-Null }
