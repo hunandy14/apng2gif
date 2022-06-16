@@ -134,7 +134,7 @@ function DLLSticker {
     $Animation = "https://stickershop.line-scdn.net/stickershop/v1/product/$ID/PC/stickerpack.zip"
     $URL = $Animation
     $Response = Invoke-WebRequest -Uri:$URL -ErrorAction:SilentlyContinue
-    if (!$Response) { Write-Host "貼圖代碼無效:: 貼圖代碼錯誤或是該貼圖非動態" -ForegroundColor:Yellow } 
+    if (!$Response) { Write-Host "貼圖代碼無效:: 貼圖代碼錯誤或是該貼圖非動態" -ForegroundColor:Yellow; return } 
     # 下載位置
     $AppDir = $env:TEMP + "\DownloadLineSticker"
     if (!(Test-Path $AppDir)) { (mkdir $AppDir -Force)|Out-Null }
