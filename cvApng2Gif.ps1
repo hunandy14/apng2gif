@@ -18,8 +18,8 @@ function Install-apng2gif {
         Start-BitsTransfer $AppSource $AppPath
         # Invoke-WebRequest $AppSource -OutFile:$env:TEMP\$FileName
         # Expand-Archive "$env:TEMP\$FileName" $AppPath -Force
-        # explorer $AppDir
-    } # explorer $AppDir
+        # explorer.exe $AppDir
+    } # explorer.exe $AppDir
     # 加到臨時變數
     if (($env:Path).IndexOf($AppDir) -eq -1) {
         if ($env:Path[-1] -ne ';') { $env:Path = $env:Path+';' }
@@ -73,7 +73,7 @@ function cvApng2Gif_core {
         
     }
     # 開啟目錄資料夾
-    if ($Explore) { explorer $OutPath }
+    if ($Explore) { explorer.exe $OutPath }
     Write-Host "檔案已輸出到: " -NoNewline
     Write-Host $OutPath -ForegroundColor:Yellow
 }
@@ -164,11 +164,11 @@ function DLLSticker {
         # 靜態貼圖移動到新位置
         if (!$Path) { $Path = "$AppDir\$ID"; $Explore = $true }
         if (!(Test-Path $Path)) {(mkdir $Path -Force)|Out-Null }
-        $Items = (Get-ChildItem $ExpPath -Filter:'*.png') -notmatch('key|tab_o')
-        Move-Item $Items $Path -Force
+        $Items = ((Get-ChildItem $ExpPath -Filter:'*.png') -notmatch('key|tab_o'))
+        Move-Item $Items.FullName $Path -Force
         Write-Host "檔案已輸出到: " -NoNewline
         Write-Host $Path -ForegroundColor:Yellow
-        if ($Explore) { explorer $Path }
+        if ($Explore) { explorer.exe $Path }
     } else {
         # 動態貼圖轉換檔案
         if (!$Path) { $Path = "$AppDir\$ID"; $Explore = $true }
@@ -180,3 +180,4 @@ function DLLSticker {
 # DLLSticker -ID:13607322 # 動態
 # DLLSticker -ID:24468 # 靜態
 # DLLSticker -ID:26033 # 靜態
+# DLLSticker -ID:6342813 # 靜態
