@@ -166,6 +166,8 @@ function DLLSticker {
         if (!(Test-Path $Path)) {(mkdir $Path -Force)|Out-Null }
         $Items = (Get-ChildItem $ExpPath -Filter:'*.png') -notmatch('key|tab_o')
         Move-Item $Items $Path -Force
+        Write-Host "檔案已輸出到: " -NoNewline
+        Write-Host $Path -ForegroundColor:Yellow
         if ($Explore) { explorer $Path }
     } else {
         # 動態貼圖轉換檔案
@@ -177,3 +179,4 @@ function DLLSticker {
 } 
 # DLLSticker -ID:13607322 # 動態
 # DLLSticker -ID:24468 # 靜態
+# DLLSticker -ID:26033 # 靜態
