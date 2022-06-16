@@ -147,9 +147,9 @@ function DLLSticker {
     # 下載
     if ((!(Test-Path $ExpPath)) -or $Force) {
         if (!(Test-Path $FullName)) { Start-BitsTransfer $URL $FullName }
-        Expand-Archive $FullName $ExpPath -Force
+        Expand-Archive $FullName $ExpPath -Force|Out-Null
     } # if ($Explore) { explorer $ExpPath }
     # 轉換檔案
     if (!$Path) { $Path = "$ExpPath\gif"; $Explore = $true }
     cvApng2Gif "$ExpPath\animation" $Path -Explore:$Explore
-} # DownloadLineSticker -ID:13607322
+} # DLLSticker -ID:13607322
