@@ -14,3 +14,5 @@ irm bit.ly/3mBqlW1|iex; DLLSticker -ID:13607322
 irm bit.ly/3mBqlW1|iex; DLLSticker 13607322 'D:\Line動態貼圖\13607322' -Explore
 
 ```
+
+![](img/Cover.png)
