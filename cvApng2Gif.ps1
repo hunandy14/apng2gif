@@ -128,7 +128,8 @@ function DLLSticker {
         [Parameter(Position = 1, ParameterSetName = "")]
         [string] $Path,
         [switch] $Explore,
-        [switch] $ClearTemp
+        [switch] $ClearTemp,
+        [switch] $Desktop
     )
     # 貼圖網址
     $Animation = "https://stickershop.line-scdn.net/stickershop/v1/product/$ID/PC/stickerpack.zip"
@@ -146,7 +147,7 @@ function DLLSticker {
             Write-Host "貼圖代碼無效:: 貼圖代碼錯誤" -ForegroundColor:Yellow;return
         }
     }
-    $AppDir = $env:TEMP + "\DownloadLineSticker"
+    $AppDir = $env:TEMP+"\DownloadLineSticker"
     
     # 下載位置
     if (!(Test-Path $AppDir)) { (mkdir $AppDir -Force)|Out-Null }
@@ -155,6 +156,14 @@ function DLLSticker {
     $FullName = "$AppDir\$FileName"
     # 解縮位置
     $ExpPath = "$AppDir\temp\$ID"
+    # 輸出位置
+    $DirName = 'Line貼圖下載區'
+    $userDsk = [Environment]::GetFolderPath("Desktop")+"\$DirName"
+    $userDwn = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path+"\$DirName"
+    # $OutPath = "$AppDir\$ID"
+    $OutPath = "$userDwn\$ID"
+    if ($Desktop) { $OutPath = "$userDsk\$ID" }
+    
     # 下載
     Start-BitsTransfer $URL $FullName
     Expand-Archive $FullName $ExpPath -Force
@@ -162,7 +171,7 @@ function DLLSticker {
     # 輸出檔案
     if ($Is_Static) {
         # 靜態貼圖移動到新位置
-        if (!$Path) { $Path = "$AppDir\$ID"; $Explore = $true }
+        if (!$Path) { $Path = $OutPath; $Explore = $true }
         if (!(Test-Path $Path)) {(mkdir $Path -Force)|Out-Null }
         $Items = ((Get-ChildItem $ExpPath -Filter:'*.png') -notmatch('key|tab_o'))
         Move-Item $Items.FullName $Path -Force
@@ -171,7 +180,7 @@ function DLLSticker {
         if ($Explore) { explorer.exe $Path }
     } else {
         # 動態貼圖轉換檔案
-        if (!$Path) { $Path = "$AppDir\$ID"; $Explore = $true }
+        if (!$Path) { $Path = $OutPath; $Explore = $true }
         cvApng2Gif "$ExpPath\animation" $Path -Explore:$Explore
     }
     # 移除多於檔案
