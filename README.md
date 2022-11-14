@@ -1,7 +1,7 @@
 Line動態GIF貼圖下載
 ===
 
-下載到桌面
+下載啟動捷徑到桌面 (啟動後直接輸入號碼即可)
 ```ps1
 irm bit.ly/3mBqlW1|iex; Download_DLLSticker
 ```
