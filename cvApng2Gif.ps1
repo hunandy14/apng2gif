@@ -1,3 +1,9 @@
+# 同步化C#的工作路徑
+[IO.Directory]::SetCurrentDirectory(((Get-Location -PSProvider FileSystem).ProviderPath))
+
+
+
+# 安裝apng2gif
 function Install-apng2gif {
     param (
         [switch] $Force
@@ -29,6 +35,9 @@ function Install-apng2gif {
     if (Test-Path -PathType:Leaf $AppPath) { return $AppDir }
 } # Install-apng2gif -Add2EnvPath
 
+
+
+# 轉換png到gif的核心函式
 function cvApng2Gif_core {
     param (
         [Parameter(Position = 0, ParameterSetName = "", Mandatory)]
@@ -81,6 +90,7 @@ function cvApng2Gif_core {
 # cvApng2Gif_core 'animation' 'gif' -Log
 # cvApng2Gif_core 'Z:\work\animation' 'Z:\work\gif' -Log
 
+# 轉換png到gif的API
 function cvApng2Gif {
     param (
         [Parameter(Position = 0, ParameterSetName = "", Mandatory)]
@@ -121,6 +131,11 @@ function cvApng2Gif {
 # cvApng2Gif 'animation' 'gif' -Log
 # cvApng2Gif 'Z:\work\animation' 'Z:\work\gif' -Log
 
+
+
+
+
+# 下載LINE貼圖的API
 function DLLSticker {
     param (
         [Parameter(Position = 0, ParameterSetName = "", Mandatory)]
