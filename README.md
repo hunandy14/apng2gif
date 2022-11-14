@@ -16,3 +16,16 @@ irm bit.ly/3mBqlW1|iex; DLLSticker 13607322 'D:\Line動態貼圖\13607322' -Expl
 ```
 
 ![](img/Cover.png)
+
+
+## 新增捷徑
+
+下載範例到桌面
+```ps1
+irm bit.ly/3mBqlW1|iex; Download_DLLSticker
+```
+
+捷徑的項目位置
+```ps1
+powershell -Nop -C "$ID=(Read-Host '輸入Line貼圖網址中數字的代碼'); irm bit.ly/3mBqlW1|iex; DLLSticker -ID:$ID"
+```

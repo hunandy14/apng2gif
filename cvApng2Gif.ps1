@@ -205,3 +205,17 @@ function DLLSticker {
 # DLLSticker -ID:24468 # 靜態
 # DLLSticker -ID:26033 # 靜態
 # DLLSticker -ID:6342813 # 靜態
+
+
+
+# 下載DLLSticker
+function Download_DLLSticker {
+    param (
+        [string] $Path = $([Environment]::GetFolderPath('Desktop')),
+        [string] $Name = "下載Line貼圖.lnk",
+        [switch] $Force
+    )
+    $Url      = "https://github.com/hunandy14/apng2gif/raw/master/soft/DLLSticker.lnk"
+    $FullName = "$Path\$Name"
+    if (!(Test-Path $FullName) -or $Force) { Start-BitsTransfer $Url $FullName }
+} # Download_DLLSticker
