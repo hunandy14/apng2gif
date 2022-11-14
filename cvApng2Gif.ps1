@@ -93,18 +93,19 @@ function DLLSticker {
     # 下載位置
     $AppDir = $env:TEMP+"\DownloadLineSticker"
     if (!(Test-Path $AppDir)) { (mkdir $AppDir -Force)|Out-Null }
-    # 檔案名稱
-    $FullName = "$AppDir\$BaseName.zip"
-    # 解縮位置
-    $ExpPath = "$AppDir\temp\$ID"
     # 輸出位置
+    $OutPath = $null
     $DirName = 'Line貼圖下載區'
-    $userDsk = [Environment]::GetFolderPath("Desktop")+"\$DirName"
-    $userDwn = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path+"\$DirName"
-    $OutPath = "$userDwn\$ID"
-    if ($Desktop) { $OutPath = "$userDsk\$ID" }
-    
+    if ($Desktop) {
+        $userDsk = [Environment]::GetFolderPath("Desktop")+"\$DirName"
+        $OutPath = "$userDsk\$ID"
+    } else {
+        $userDwn = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path+"\$DirName"
+        $OutPath = "$userDwn\$ID"
+    }
     # 下載
+    $FullName = "$AppDir\$BaseName.zip"
+    $ExpPath = "$AppDir\temp\$ID"
     Start-BitsTransfer $URL $FullName
     Expand-Archive $FullName $ExpPath -Force
     
