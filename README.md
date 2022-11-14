@@ -1,6 +1,13 @@
 Line動態GIF貼圖下載
 ===
 
+下載到桌面
+```ps1
+irm bit.ly/3mBqlW1|iex; Download_DLLSticker
+```
+
+<br><br>
+
 ## Line動態GIF貼圖下載
 範例貼圖網址：https://store.line.me/stickershop/product/13607322/zh-Hant?ref=Desktop  
 
@@ -18,13 +25,10 @@ irm bit.ly/3mBqlW1|iex; DLLSticker 13607322 'D:\Line動態貼圖\13607322' -Expl
 ![](img/Cover.png)
 
 
-## 新增捷徑
 
-下載範例到桌面
-```ps1
-irm bit.ly/3mBqlW1|iex; Download_DLLSticker
-```
+<br><br><br>
 
+## 其他
 捷徑的項目位置
 ```ps1
 powershell -Nop -C "$ID=(Read-Host '輸入Line貼圖網址中數字的代碼'); irm bit.ly/3mBqlW1|iex; DLLSticker -ID:$ID"
