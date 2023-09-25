@@ -1,3 +1,27 @@
+# 檢查鏈接是否有效
+function Test-URI {
+    param (
+        [Parameter(Position=0, Mandatory)]
+        [string] $Uri
+    )
+    try {
+        # 嘗試發送 HEAD 請求
+        $response = Invoke-WebRequest -Uri $Uri -Method Head -TimeoutSec 10
+        # 檢查 HTTP 狀態碼是否為 200
+        if ($response -and $response.StatusCode -eq 200) {
+            return $true
+        } else {
+            # Write-Warning "Received HTTP status code $($response.StatusCode). The link might not be valid."
+            return $false
+        }
+    } catch {
+        # Write-Warning "Error checking the link: $_"
+        return $null
+    }
+} # Test-URI "https://github.com/hunandy14/apng2gif/raw/master/bin/apng2gif.exe"
+
+
+
 # 安裝apng2gif
 function Install-apng2gif {
     param (
@@ -86,21 +110,24 @@ function DLLSticker {
         [switch] $Desktop
     )
     # 貼圖網址
-    $Animation = "https://stickershop.line-scdn.net/stickershop/v1/product/$ID/PC/stickerpack.zip"
-    $Sticker   = "https://stickershop.line-scdn.net/stickershop/v1/product/$ID/PC/stickers.zip"
-    # 設定
-    $URL = $Animation
-    $BaseName = "stickerpack"
-    # 確認網址有效性
-    try { Invoke-WebRequest -Uri:$Animation -ErrorAction:Stop|Out-Null } catch {
+    $Animation = "https://stickershop.line-scdn.net/stickershop/v1/product/$ID/PC/stickerpack.zip"  # 動態貼圖(PC)
+    $Sticker   = "https://stickershop.line-scdn.net/stickershop/v1/product/$ID/PC/stickers.zip"     # 靜態貼圖(PC)
+    
+    # 驗證網址有效性
+    if (Test-URI $Animation) {
+        # 確認網址有效性
+        $Is_Static = $false
+        $URL = $Animation
+        $BaseName = "stickerpack"
+    } elseif (Test-URI $Sticker) { 
+        # 非動態貼圖
         $Is_Static = $true
         $URL = $Sticker
         $BaseName = 'stickers'
-        # 非動態貼圖
-        try { Invoke-WebRequest -Uri:$Sticker -ErrorAction:Stop|Out-Null } catch { 
-            Write-Host "貼圖代碼無效:: 貼圖代碼錯誤" -ForegroundColor:Yellow;return
-        }
+    } else {
+        Write-Host "貼圖代碼無效:: 貼圖代碼錯誤" -ForegroundColor:Yellow;return
     }
+    
     
     # 下載位置
     $AppDir = $env:TEMP+"\DownloadLineSticker"
