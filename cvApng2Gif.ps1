@@ -8,20 +8,32 @@ function Install-apng2gif {
     $AppDir     = "$env:TEMP" + "\apng2gif"
     $FileName   = "apng2gif.exe"
     $AppPath    = "$AppDir\$FileName"
-    # 檢測命令是否已經存在
+    
+    # 檢測命令是否已經存在 (別重載汙染環境變數)
     if (Get-Command $FileName -CommandType:Application -ErrorAction:0) { return }
-    # 創建資料夾
-    if (!(Test-Path -PathType:Container $AppDir)) { (mkdir $AppDir -Force)|Out-Null }
+    
     # 下載
-    if (!(Test-Path -PathType:Leaf $AppPath) -or $Force) { Start-BitsTransfer $AppSource $AppPath }
+    if (!(Test-Path -PathType:Leaf $AppPath) -or $Force) {
+        try {
+            if (!(Test-Path -PathType:Container $AppDir)) { (mkdir $AppDir -Force)|Out-Null }
+            (New-Object Net.WebClient).DownloadFile($AppSource, $AppPath)
+        } catch {
+            Write-Error $_.Exception.Message -ErrorAction Stop
+        }
+    }
+    
     # 加到臨時變數
     if (($env:Path).IndexOf($AppDir) -eq -1) {
-        if ($env:Path[-1] -ne ';') { $env:Path = $env:Path+';' }
-        $env:Path = $env:Path + "$AppDir"
+        if ($env:Path[-1] -ne ';') { $env:Path = "$env:Path;" }
+        $env:Path = $env:Path+ "$AppDir"
     }
+    
     # 輸出
-    if (Test-Path -PathType:Leaf $AppPath) { return $AppDir }
-} # Install-apng2gif -Add2EnvPath
+    if (Test-Path -PathType:Leaf $AppPath) {
+        return $AppDir
+    }
+} # Install-apng2gif -Add2EnvPath -Force
+
 
 
 
