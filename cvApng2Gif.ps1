@@ -73,7 +73,7 @@ function cvApng2Gif {
     # 同步化C#的工作路徑
     [IO.Directory]::SetCurrentDirectory(((Get-Location -PSProvider FileSystem).ProviderPath))
     # 檢測路徑
-    if (!(Test-Path -Type:Container $Path)){ Write-Error "錯誤:: 路徑 `"$Path`" 可能有誤"; return } 
+    if (!(Test-Path -Type:Container $Path)){ Write-Error "錯誤:: 路徑 '$Path' 可能有誤" -ErrorAction Stop } 
     $Path = [System.IO.Path]::GetFullPath($Path)
     # 輸出路徑為空
     if (!$OutPath) { $OutPath  = "$env:TEMP\cvApng2Gif\gif" }
@@ -110,20 +110,23 @@ function DLLSticker {
         [switch] $Desktop
     )
     # 貼圖網址列表
-    $Urls = @(
-        "https://stickershop.line-scdn.net/stickershop/v1/product/$ID/PC/stickerpack.zip",
-        "https://stickershop.line-scdn.net/stickershop/v1/product/$ID/PC/stickers.zip"
-    )
-    
-    # 驗證網址
-    $ValidUrl = $Urls | Where-Object { Test-URI $_ } | Select-Object -First 1
-    if ($ValidUrl) {
-        $URL = $ValidUrl
+    $Urls = [ordered] @{
+        "SticDyn" = "https://stickershop.line-scdn.net/stickershop/v1/product/$ID/PC/stickerpack.zip"
+        "SticStc" = "https://stickershop.line-scdn.net/stickershop/v1/product/$ID/PC/stickers.zip"
+        "EmojDyn" = "https://stickershop.line-scdn.net/sticonshop/v1/$ID/sticon/android/package_animation.zip"
+        "EmojStc" = "https://stickershop.line-scdn.net/sticonshop/v1/$ID/sticon/android/package.zip"
+    }
+
+    # 以KeyValuePair的形式驗證網址
+    $ValidEntry = $Urls.GetEnumerator() | Where-Object { Test-URI $_.Value } | Select-Object -First 1
+    if ($ValidEntry) {
+        $URL = $ValidEntry.Value
+        $type = $ValidEntry.Name
         $BaseName = if ($URL -match '.*/(.*?).zip$') { $matches[1] }
-        $Is_Static = ($BaseName -eq "stickers")
+        $Is_Static = $type -match "Stc$"
+        $Dyn_Path = if ($type -eq 'SticDyn') {'\animation'} else { '' }
     } else {
-        Write-Host "貼圖代碼無效:: 貼圖代碼錯誤" -ForegroundColor Yellow
-        return
+        Write-Host "錯誤:: 無法獲取有效網址, 貼圖代碼 '$ID' 可能有誤" -ErrorAction Stop
     }
     
     
@@ -151,25 +154,27 @@ function DLLSticker {
         # 靜態貼圖移動到新位置
         if (!$Path) { $Path = $OutPath}
         if (!(Test-Path $Path)) {(mkdir $Path -Force)|Out-Null }
-        $Items = ((Get-ChildItem $ExpPath -Filter:'*.png') -notmatch('key|tab_o'))
+        $Items = ((Get-ChildItem $ExpPath -Filter:'*.png') -notmatch('key|tab_o|\.json$'))
         Move-Item $Items.FullName $Path -Force
     } else {
         # 動態貼圖轉換檔案
         if (!$Path) { $Path = $OutPath}
-        cvApng2Gif "$ExpPath\animation" $Path -OutNull
+        $pngPath = ($ExpPath+$Dyn_Path)
+        cvApng2Gif $pngPath $Path -OutNull
     }
     # 輸出
     Write-Host "檔案已輸出到: " -NoNewline; Write-Host $Path -ForegroundColor:Yellow
     # 打開資料夾
     if (!$NotOpenExplore) { explorer.exe $Path }
     # 移除多於檔案
+    $AppDir
     if ($ClearTemp) { (Get-ChildItem "$AppDir\temp" -Recurse -File -Include:'*.png')|Remove-Item }
 } # DLLSticker 13607322
+# DLLSticker -Desktop -NotOpenExplore -ID:26033                      # 貼圖靜態(大圖)
 # DLLSticker -Desktop -NotOpenExplore -ID:13607322                   # 貼圖動態
 # DLLSticker -Desktop -NotOpenExplore -ID:24468                      # 貼圖靜態
-# DLLSticker -Desktop -NotOpenExplore -ID:26033                      # 貼圖靜態(大圖)
-# DLLSticker -Desktop -NotOpenExplore -ID 63be6d9785d52f7ff1258458   # 表情動態
 # DLLSticker -Desktop -NotOpenExplore -ID 5ca9a963031a677a3a4a4832   # 表情靜態
+# DLLSticker -Desktop -NotOpenExplore -ID 63be6d9785d52f7ff1258458   # 表情動態
 
 
 
