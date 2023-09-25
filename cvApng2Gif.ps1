@@ -109,23 +109,21 @@ function DLLSticker {
         [switch] $ClearTemp,
         [switch] $Desktop
     )
-    # 貼圖網址
-    $Animation = "https://stickershop.line-scdn.net/stickershop/v1/product/$ID/PC/stickerpack.zip"  # 動態貼圖(PC)
-    $Sticker   = "https://stickershop.line-scdn.net/stickershop/v1/product/$ID/PC/stickers.zip"     # 靜態貼圖(PC)
+    # 貼圖網址列表
+    $Urls = @(
+        "https://stickershop.line-scdn.net/stickershop/v1/product/$ID/PC/stickerpack.zip",
+        "https://stickershop.line-scdn.net/stickershop/v1/product/$ID/PC/stickers.zip"
+    )
     
-    # 驗證網址有效性
-    if (Test-URI $Animation) {
-        # 確認網址有效性
-        $Is_Static = $false
-        $URL = $Animation
-        $BaseName = "stickerpack"
-    } elseif (Test-URI $Sticker) { 
-        # 非動態貼圖
-        $Is_Static = $true
-        $URL = $Sticker
-        $BaseName = 'stickers'
+    # 驗證網址
+    $ValidUrl = $Urls | Where-Object { Test-URI $_ } | Select-Object -First 1
+    if ($ValidUrl) {
+        $URL = $ValidUrl
+        $BaseName = if ($URL -match '.*/(.*?).zip$') { $matches[1] }
+        $Is_Static = ($BaseName -eq "stickers")
     } else {
-        Write-Host "貼圖代碼無效:: 貼圖代碼錯誤" -ForegroundColor:Yellow;return
+        Write-Host "貼圖代碼無效:: 貼圖代碼錯誤" -ForegroundColor Yellow
+        return
     }
     
     
@@ -145,7 +143,7 @@ function DLLSticker {
     # 下載
     $FullName = "$AppDir\$BaseName.zip"
     $ExpPath = "$AppDir\temp\$ID"
-    Start-BitsTransfer $URL $FullName
+    (New-Object Net.WebClient).DownloadFile($URL, $FullName)
     Expand-Archive $FullName $ExpPath -Force
     
     # 輸出檔案
@@ -166,13 +164,12 @@ function DLLSticker {
     if (!$NotOpenExplore) { explorer.exe $Path }
     # 移除多於檔案
     if ($ClearTemp) { (Get-ChildItem "$AppDir\temp" -Recurse -File -Include:'*.png')|Remove-Item }
-} 
-# DLLSticker -ID:13607322 -NotOpenExplore # 動態
-# DLLSticker -ID:24468 -NotOpenExplore # 靜態
-# DLLSticker -ID:13607322 # 動態
-# DLLSticker -ID:24468 # 靜態
-# DLLSticker -ID:26033 # 靜態(大圖)
-# DLLSticker -ID:6342813 # 靜態
+} # DLLSticker 13607322
+# DLLSticker -Desktop -NotOpenExplore -ID:13607322                   # 貼圖動態
+# DLLSticker -Desktop -NotOpenExplore -ID:24468                      # 貼圖靜態
+# DLLSticker -Desktop -NotOpenExplore -ID:26033                      # 貼圖靜態(大圖)
+# DLLSticker -Desktop -NotOpenExplore -ID 63be6d9785d52f7ff1258458   # 表情動態
+# DLLSticker -Desktop -NotOpenExplore -ID 5ca9a963031a677a3a4a4832   # 表情靜態
 
 
 
@@ -185,5 +182,7 @@ function Download_DLLSticker {
     )
     $Url      = "https://github.com/hunandy14/apng2gif/raw/master/soft/DLLSticker.lnk"
     $FullName = "$Path\$Name"
-    if (!(Test-Path $FullName) -or $Force) { Start-BitsTransfer $Url $FullName }
+    if (!(Test-Path $FullName) -or $Force) {
+        (New-Object Net.WebClient).DownloadFile($Url, $FullName)
+    }
 } # Download_DLLSticker
