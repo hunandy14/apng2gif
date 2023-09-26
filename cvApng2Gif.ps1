@@ -167,7 +167,6 @@ function DLLSticker {
     # 打開資料夾
     if (!$NotOpenExplore) { explorer.exe $Path }
     # 移除多於檔案
-    $AppDir
     if ($ClearTemp) { (Get-ChildItem "$AppDir\temp" -Recurse -File -Include:'*.png')|Remove-Item }
 } # DLLSticker 13607322
 # DLLSticker -Desktop -NotOpenExplore -ID:26033                      # 貼圖靜態(大圖)
